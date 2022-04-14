@@ -1,4 +1,3 @@
-use std::error;
 use async_trait::async_trait;
 use rust_bert::gpt_neo::{
     GptNeoConfigResources, GptNeoMergesResources, GptNeoModelResources, GptNeoVocabResources,
@@ -6,8 +5,8 @@ use rust_bert::gpt_neo::{
 use rust_bert::pipelines::common::ModelType;
 use rust_bert::pipelines::text_generation::{TextGenerationConfig, TextGenerationModel};
 use rust_bert::resources::{RemoteResource, Resource};
+use std::error;
 use tch::Device;
-
 
 use crate::ai::AI;
 

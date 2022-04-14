@@ -1,18 +1,26 @@
 [package]
+edition = "2021"
 name = "bert-cli"
 version = "0.1.0"
-edition = "2021"
 
 [[bin]]
+bench = false
 name = "bert-cli"
 path = "src/bin.rs"
 test = false
+
+[[bin]]
 bench = false
+name = "bert-web"
+path = "src/api.rs"
+test = false
 
 [dependencies]
 async-trait = "0.1.52"
-rust-bert = { version = "0.17" }
+rocket = {version = "0.5.0-rc.1", default-features = false, features = ["json"]}
+rocket_okapi = {version = "0.8.0-alpha-1", features = ["swagger", "rapidoc"]}
+rust-bert = {version = "0.17"}
 serde = "1"
-structopt = { version = "0.3", default-features = false }
-tokio = { version = "1", features = ["full"] }
-tch = { version = "~0.6.1" }
+structopt = {version = "0.3", default-features = false}
+tch = {version = "~0.6.1"}
+tokio = {version = "1", features = ["full"]}

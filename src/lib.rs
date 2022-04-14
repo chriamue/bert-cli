@@ -40,8 +40,11 @@ impl Bert {
         _top_p: f32,
         _stop_sequence: Option<String>,
     ) -> Result<GenerateResponse, Box<dyn error::Error>> {
-
-        let result = self.ai.response(context.to_string(), token_max_length).await.unwrap();
+        let result = self
+            .ai
+            .response(context.to_string(), token_max_length)
+            .await
+            .unwrap();
 
         let gr = GenerateResponse {
             model: "".to_string(),

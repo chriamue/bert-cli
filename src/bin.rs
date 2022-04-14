@@ -32,56 +32,37 @@ struct Opt {
     #[structopt(subcommand)]
     command: Option<Command>,
 
-    #[structopt(
-        short = "m",
-        long = "model",
-        default_value = "gpt2"
-    )]
+    #[structopt(short = "m", long = "model", default_value = "gpt2")]
     model: String,
 
     context: Option<String>,
-    
 }
 
 #[tokio::main]
 async fn main() {
     let opt = Opt::from_args();
     let ai = create_ai(opt.model);
-    let gpt = Bert {
-        ai: ai
-    };
+    let gpt = Bert { ai: ai };
     match opt.command {
         Some(Command::Generate {
             token_max_length,
             temperature,
             top_p,
             stop_sequence,
-            context
+            context,
         }) => {
             let response = gpt
-                .generate(
-                    context,
-                    token_max_length,
-                    temperature,
-                    top_p,
-                    stop_sequence,
-                )
+                .generate(context, token_max_length, temperature, top_p, stop_sequence)
                 .await
                 .unwrap();
             println!("{}", response.text);
         }
-        Some(Command::Classify {labels, sequence}) => {
+        Some(Command::Classify { labels, sequence }) => {
             unimplemented!("Not implemented yet!");
-        },
+        }
         None => {
             let response = gpt
-                .generate(
-                    opt.context.unwrap_or_default(),
-                    200,
-                    0.9,
-                    0.9,
-                    None,
-                )
+                .generate(opt.context.unwrap_or_default(), 200, 0.9, 0.9, None)
                 .await
                 .unwrap();
             println!("{}", response.text);
