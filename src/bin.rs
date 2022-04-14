@@ -42,7 +42,7 @@ struct Opt {
 async fn main() {
     let opt = Opt::from_args();
     let ai = create_ai(opt.model);
-    let gpt = Bert { ai: ai };
+    let gpt = Bert { ai };
     match opt.command {
         Some(Command::Generate {
             token_max_length,
@@ -57,7 +57,10 @@ async fn main() {
                 .unwrap();
             println!("{}", response.text);
         }
-        Some(Command::Classify { labels, sequence }) => {
+        Some(Command::Classify {
+            labels: _,
+            sequence: _,
+        }) => {
             unimplemented!("Not implemented yet!");
         }
         None => {

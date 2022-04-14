@@ -2,7 +2,7 @@ use async_trait::async_trait;
 use std::error;
 
 #[async_trait]
-pub trait AI {
+pub trait AI: Send + Sync {
     async fn response(
         &self,
         context: String,

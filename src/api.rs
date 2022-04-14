@@ -1,4 +1,6 @@
+use bert_cli::Bert;
 use rocket::form::FromForm;
+use rocket::State;
 use rocket::{get, post, serde::json::Json};
 use rocket_okapi::okapi::schemars;
 use rocket_okapi::okapi::schemars::JsonSchema;
@@ -18,7 +20,7 @@ fn example_temp() -> f32 {
     0.8
 }
 
-fn example_response_length() -> u32 {
+fn example_response_length() -> u16 {
     128
 }
 
@@ -39,7 +41,7 @@ struct GenerationRequest {
     #[schemars(example = "example_temp")]
     temp: f32,
     #[schemars(example = "example_response_length")]
-    response_length: u32,
+    response_length: u16,
     #[schemars(example = "example_remove_input")]
     remove_input: Option<bool>,
 }
@@ -52,22 +54,49 @@ struct GenerationResponse {
 
 #[openapi(tag = "Generation")]
 #[get("/completion?<request..>")]
-fn get_completion(request: GenerationRequest) -> Json<GenerationResponse> {
+async fn get_completion(
+    bert: &State<Bert>,
+    request: GenerationRequest,
+) -> Json<GenerationResponse> {
+    let response = bert
+        .generate(
+            request.context.to_string(),
+            request.response_length,
+            request.temp,
+            request.top_p,
+            None,
+        )
+        .await
+        .unwrap();
     Json(GenerationResponse {
-        generated_text: request.context.to_string(),
+        generated_text: response.text,
     })
 }
 
 #[openapi(tag = "Generation")]
 #[post("/completion", data = "<request>")]
-fn post_completion(request: Json<GenerationRequest>) -> Json<GenerationResponse> {
+async fn post_completion(
+    bert: &State<Bert>,
+    request: Json<GenerationRequest>,
+) -> Json<GenerationResponse> {
+    let response = bert
+        .generate(
+            request.context.to_string(),
+            request.response_length,
+            request.temp,
+            request.top_p,
+            None,
+        )
+        .await
+        .unwrap();
     Json(GenerationResponse {
-        generated_text: request.context.to_string(),
+        generated_text: response.text,
     })
 }
 
 #[rocket::main]
 async fn main() {
+    let bert = Bert::default();
     let launch_result = rocket::build()
         .mount(
             "/api/",
@@ -95,6 +124,7 @@ async fn main() {
                 ..Default::default()
             }),
         )
+        .manage(bert)
         .launch()
         .await;
     match launch_result {

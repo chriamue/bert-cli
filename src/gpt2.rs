@@ -12,12 +12,9 @@ pub struct GPT2 {
 
 impl GPT2 {
     pub fn new() -> Self {
-        let model = std::thread::spawn(move || {
-            let model = GPT2Generator::new(Default::default()).unwrap();
-            model
-        })
-        .join()
-        .expect("Thread panicked");
+        let model = std::thread::spawn(move || GPT2Generator::new(Default::default()).unwrap())
+            .join()
+            .expect("Thread panicked");
         GPT2 { model }
     }
 }
