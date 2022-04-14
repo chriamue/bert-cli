@@ -1,0 +1,9 @@
+version: "3.2"
+services:
+  provider:
+    # image: ghcr.io/chriamue/bert-cli/bert-web:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./Rocket.toml:/Rocket.toml
