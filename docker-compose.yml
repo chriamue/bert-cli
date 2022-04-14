@@ -5,5 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    ports:
+      - 8080:8080
     volumes:
       - ./Rocket.toml:/Rocket.toml
