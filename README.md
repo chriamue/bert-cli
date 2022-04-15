@@ -22,6 +22,24 @@ cargo run --bin bert-web
 
 Visit localhost:8000/swagger-ui
 
+### config
+
+You can configure the model in the `Rocket.toml` file.
+
+```toml
+[default]
+ident = "bert-web"
+# [gptneo, gpt2]
+model = "gpt2"
+
+[debug]
+port = 8000
+
+[release]
+address = "0.0.0.0"
+port = 8080
+```
+
 ## docker
 
 ```sh
