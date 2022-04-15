@@ -1,5 +1,7 @@
 [default]
 ident = "bert-web"
+# [gptneo, gpt2]
+model = "gpt2"
 
 [debug]
 port = 8000

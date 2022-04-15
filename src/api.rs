@@ -1,4 +1,5 @@
-use bert_cli::Bert;
+use bert_cli::{create_ai, Bert};
+use rocket::fairing::{Fairing, Info, Kind};
 use rocket::form::FromForm;
 use rocket::State;
 use rocket::{get, post, serde::json::Json};
@@ -7,6 +8,9 @@ use rocket_okapi::okapi::schemars::JsonSchema;
 use rocket_okapi::settings::UrlObject;
 use rocket_okapi::{openapi, openapi_get_routes, rapidoc::*, swagger_ui::*};
 use serde::{Deserialize, Serialize};
+
+mod config;
+use config::Config;
 
 fn example_context() -> &'static str {
     "Hello World!"
@@ -96,8 +100,17 @@ async fn post_completion(
 
 #[rocket::main]
 async fn main() {
-    let bert = Bert::default();
-    let launch_result = rocket::build()
+    let rocket = rocket::build();
+
+    let figment = rocket.figment();
+    let config: Config = figment.extract().expect("config");
+
+    let bert = Bert {
+        ai: create_ai(config.model),
+    };
+
+    println!("Model {} loaded.", bert.ai.name());
+    let launch_result = rocket
         .mount(
             "/api/",
             openapi_get_routes![get_completion, post_completion],
