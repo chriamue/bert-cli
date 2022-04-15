@@ -4,12 +4,14 @@ use std::error;
 mod ai;
 mod gpt2;
 mod gptneo;
+mod gptneo1;
 mod gptneo2;
 
 pub fn create_ai(ai: String) -> Box<dyn ai::AI> {
     match ai.as_str() {
         "gpt2" => Box::new(gpt2::GPT2::new()),
         "gptneo" => Box::new(gptneo::GPTNeo::new()),
+        "gptneo1" => Box::new(gptneo1::GPTNeo1::new()),
         "gptneo2" => Box::new(gptneo2::GPTNeo2::new()),
         _ => Box::new(gptneo::GPTNeo::new()),
     }

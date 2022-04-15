@@ -1,5 +1,4 @@
 use bert_cli::{create_ai, Bert};
-use rocket::fairing::{Fairing, Info, Kind};
 use rocket::form::FromForm;
 use rocket::State;
 use rocket::{get, post, serde::json::Json};
