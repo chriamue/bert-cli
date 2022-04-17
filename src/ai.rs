@@ -7,6 +7,9 @@ pub trait AI: Send + Sync {
         &self,
         context: String,
         token_max_length: u16,
+        temperature: f32,
+        top_p: f32,
+        stop_sequence: Option<String>,
     ) -> Result<String, Box<dyn error::Error>>;
     fn name(&self) -> String;
 }

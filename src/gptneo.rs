@@ -42,7 +42,7 @@ impl GPTNeo {
             temperature: 3.5,
             top_p: 0.9,
             top_k: 55,
-            device: Device::Cpu,
+            device: Device::cuda_if_available(),
             ..Default::default()
         };
 
@@ -67,6 +67,9 @@ impl AI for GPTNeo {
         &self,
         context: String,
         _token_max_length: u16,
+        _temperature: f32,
+        _top_p: f32,
+        _stop_sequence: Option<String>,
     ) -> Result<String, Box<dyn error::Error>> {
         let output = self.model.generate(&[context.to_string()], None);
         let response = output[0].to_string();

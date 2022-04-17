@@ -29,15 +29,18 @@ impl AI for GPT2 {
         &self,
         context: String,
         token_max_length: u16,
+        temperature: f32,
+        top_p: f32,
+        _stop_sequence: Option<String>,
     ) -> Result<String, Box<dyn error::Error>> {
         let generate_options = GenerateOptions {
             max_length: Some(token_max_length.into()),
             do_sample: Some(true),
             early_stopping: Some(false),
             repetition_penalty: Some(1.1),
-            temperature: Some(2.4),
-            top_p: Some(0.95),
-            top_k: Some(60),
+            temperature: Some(temperature as f64),
+            top_p: Some(top_p as f64),
+            top_k: Some(10),
             ..Default::default()
         };
 
@@ -62,7 +65,7 @@ mod tests {
     async fn test_response() {
         let ai = GPT2::new();
         let context = "Lots of Tesla cars to deliver before year end! Your support in taking delivery is much appreciated.".to_string();
-        let output = ai.response(context.to_string(), 42).await.unwrap();
+        let output = ai.response(context.to_string(), 42, 0.9, 4.0, None).await.unwrap();
         println!("{}", output);
         assert_ne!(output, context);
         assert_ne!(output.len(), 0);

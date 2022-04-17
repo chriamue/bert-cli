@@ -40,13 +40,13 @@ impl Bert {
         &self,
         context: String,
         token_max_length: u16,
-        _temperature: f32,
-        _top_p: f32,
-        _stop_sequence: Option<String>,
+        temperature: f32,
+        top_p: f32,
+        stop_sequence: Option<String>,
     ) -> Result<GenerateResponse, Box<dyn error::Error>> {
         let result = self
             .ai
-            .response(context.to_string(), token_max_length)
+            .response(context.to_string(), token_max_length, temperature, top_p, stop_sequence)
             .await
             .unwrap();
 
