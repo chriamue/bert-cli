@@ -65,7 +65,10 @@ mod tests {
     async fn test_response() {
         let ai = GPT2::new();
         let context = "Lots of Tesla cars to deliver before year end! Your support in taking delivery is much appreciated.".to_string();
-        let output = ai.response(context.to_string(), 42, 0.9, 4.0, None).await.unwrap();
+        let output = ai
+            .response(context.to_string(), 42, 0.9, 4.0, None)
+            .await
+            .unwrap();
         println!("{}", output);
         assert_ne!(output, context);
         assert_ne!(output.len(), 0);

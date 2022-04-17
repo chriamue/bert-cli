@@ -8,7 +8,12 @@ mod gptneo;
 mod gptneo1;
 mod gptneo2;
 
-pub fn create_ai(ai: String) -> Box<dyn ai::AI> {
+pub fn create_ai(
+    ai: String,
+    token_max_length: u16,
+    temperature: f32,
+    top_p: f32,
+) -> Box<dyn ai::AI> {
     match ai.as_str() {
         "bart" => Box::new(bart::Bart::new()),
         "gpt2" => Box::new(gpt2::GPT2::new()),
@@ -48,7 +53,13 @@ impl Bert {
     ) -> Result<GenerateResponse, Box<dyn error::Error>> {
         let result = self
             .ai
-            .response(context.to_string(), token_max_length, temperature, top_p, stop_sequence)
+            .response(
+                context.to_string(),
+                token_max_length,
+                temperature,
+                top_p,
+                stop_sequence,
+            )
             .await
             .unwrap();
 
@@ -63,7 +74,7 @@ impl Bert {
 
 impl Default for Bert {
     fn default() -> Self {
-        let ai = create_ai("".to_string());
+        let ai = create_ai("".to_string(), 100, 1.1, 0.9);
         Bert { ai }
     }
 }

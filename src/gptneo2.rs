@@ -90,7 +90,10 @@ mod tests {
     async fn test_response() {
         let ai = GPTNeo2::new();
         let context = "Lots of Tesla cars to deliver before year end! Your support in taking delivery is much appreciated.".to_string();
-        let output = ai.response(context.to_string(), 42).await.unwrap();
+        let output = ai
+            .response(context.to_string(), 42, 1.1, 0.9, None)
+            .await
+            .unwrap();
         println!("{}", output);
         assert_ne!(output, context);
         assert_ne!(output.len(), 0);

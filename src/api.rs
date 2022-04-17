@@ -105,7 +105,12 @@ async fn main() {
     let config: Config = figment.extract().expect("config");
 
     let bert = Bert {
-        ai: create_ai(config.model),
+        ai: create_ai(
+            config.model,
+            config.token_max_length,
+            config.temperature,
+            config.top_p,
+        ),
     };
 
     println!("Model {} loaded.", bert.ai.name());

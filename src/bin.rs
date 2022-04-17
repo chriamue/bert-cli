@@ -41,7 +41,7 @@ struct Opt {
 #[tokio::main]
 async fn main() {
     let opt = Opt::from_args();
-    let ai = create_ai(opt.model);
+    let ai = create_ai(opt.model, 200, 1.1, 0.9);
     let gpt = Bert { ai };
     match opt.command {
         Some(Command::Generate {

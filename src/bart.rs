@@ -62,7 +62,10 @@ impl AI for Bart {
     async fn response(
         &self,
         context: String,
-        _token_max_length: u16,
+        token_max_length: u16,
+        temperature: f32,
+        top_p: f32,
+        stop_sequence: Option<String>,
     ) -> Result<String, Box<dyn error::Error>> {
         let output = self.model.generate(&[context.to_string()], None);
         let response = output[0].to_string();
@@ -83,7 +86,10 @@ mod tests {
     async fn test_response() {
         let ai = Bart::new();
         let context = "Lots of Tesla cars to deliver before year end! Your support in taking delivery is much appreciated.".to_string();
-        let output = ai.response(context.to_string(), 42).await.unwrap();
+        let output = ai
+            .response(context.to_string(), 42, 1.1, 0.9, None)
+            .await
+            .unwrap();
         println!("{}", output);
         assert_ne!(output, context);
         assert_ne!(output.len(), 0);
