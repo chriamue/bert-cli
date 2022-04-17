@@ -9,6 +9,7 @@ RUN echo "fn main() {}" > src/api.rs
 RUN cargo build --release
 RUN rm src/*.rs
 COPY src ./src
+COPY static ./static
 RUN touch src/bin.rs
 RUN cargo build --bin bert-web --release
 COPY Rocket.toml /Rocket.toml
