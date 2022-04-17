@@ -119,6 +119,7 @@ version = "0.1.0"
 dependencies = [
  "async-trait",
  "rocket",
+ "rocket-include-static-resources",
  "rocket_okapi",
  "rust-bert",
  "serde",
@@ -452,6 +453,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "debug-helper"
+version = "0.3.13"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f578e8e2c440e7297e008bb5486a3a8a194775224bbc23729b0dbdfaeebf162e"
+
+[[package]]
 name = "devise"
 version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -545,6 +552,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9852635589dc9f9ea1b6fe9f05b50ef208c85c834a562f0c6abb1c475736ec2b"
 dependencies = [
  "cfg-if",
+]
+
+[[package]]
+name = "entity-tag"
+version = "0.1.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e4ec56e489f9caf6cc04abe7f3ac402b534a3227d5baf6088cd62d2e7afbdf64"
+dependencies = [
+ "ahash",
+ "base64",
 ]
 
 [[package]]
@@ -1043,6 +1060,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "manifest-dir-macros"
+version = "0.1.14"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b60d42baa153de5741281aa3d8a0ec1866777902f8162c04ce7b7c1e31415e8f"
+dependencies = [
+ "mime_guess",
+ "once_cell",
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
 name = "matchers"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1086,6 +1116,16 @@ name = "mime"
 version = "0.3.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2a60c7ce501c71e03a9c9c0d35b861413ae925bd979cc7a4e30d060069aaac8d"
+
+[[package]]
+name = "mime_guess"
+version = "2.0.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4192263c238a5f0d0c6bfd21f336a313a4ce1c450542449ca191bb657b4642ef"
+dependencies = [
+ "mime",
+ "unicase",
+]
 
 [[package]]
 name = "miniz_oxide"
@@ -1512,6 +1552,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "rc-u8-reader"
+version = "2.0.15"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7260aa957612a72103bdeb1f7fc8d65a6cac02688bb432e94e2b824be08eb046"
+dependencies = [
+ "debug-helper",
+ "tokio",
+]
+
+[[package]]
 name = "redox_syscall"
 version = "0.2.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1659,6 +1709,40 @@ dependencies = [
  "ubyte",
  "version_check",
  "yansi",
+]
+
+[[package]]
+name = "rocket-cache-response"
+version = "0.6.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f56040aec85e110a6881a72487b32cb6bd4b4b7b014b1001728d6e455f8a5198"
+dependencies = [
+ "rocket",
+]
+
+[[package]]
+name = "rocket-etag-if-none-match"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "17ca066599e190d2a8974534bb60ef4784c35d57469d68529fd2e2726f99947b"
+dependencies = [
+ "entity-tag",
+ "rocket",
+]
+
+[[package]]
+name = "rocket-include-static-resources"
+version = "0.10.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "59bf630fb0a5ade780cd84ed8ef8c0403fe41fc4e37073e4f7aadaa6270408b6"
+dependencies = [
+ "manifest-dir-macros",
+ "mime",
+ "mime_guess",
+ "rc-u8-reader",
+ "rocket",
+ "rocket-cache-response",
+ "rocket-etag-if-none-match",
 ]
 
 [[package]]
@@ -2472,6 +2556,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5baeed7327e25054889b9bd4f975f32e5f4c5d434042d59ab6cd4142c0a76ed0"
 dependencies = [
  "serde",
+ "version_check",
+]
+
+[[package]]
+name = "unicase"
+version = "2.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "50f37be617794602aabbeee0be4f259dc1778fabe05e2d67ee8f79326d5cb4f6"
+dependencies = [
  "version_check",
 ]
 
