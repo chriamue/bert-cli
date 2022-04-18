@@ -17,14 +17,14 @@ pub fn create_ai(
     top_p: f32,
 ) -> Box<dyn ai::AI> {
     match ai.as_str() {
-        "bart" => Box::new(bart::Bart::new()),
-        "mbart" => Box::new(mbart::MBart::new()),
-        "m2m100" => Box::new(m2m100::M2M100::new()),
+        "bart" => Box::new(bart::Bart::new(token_max_length, temperature, top_p)),
+        "mbart" => Box::new(mbart::MBart::new(token_max_length, temperature, top_p)),
+        "m2m100" => Box::new(m2m100::M2M100::new(token_max_length, temperature, top_p)),
         "gpt2" => Box::new(gpt2::GPT2::new()),
-        "gptneo" => Box::new(gptneo::GPTNeo::new()),
-        "gptneo1" => Box::new(gptneo1::GPTNeo1::new()),
-        "gptneo2" => Box::new(gptneo2::GPTNeo2::new()),
-        _ => Box::new(gptneo::GPTNeo::new()),
+        "gptneo" => Box::new(gptneo::GPTNeo::new(token_max_length, temperature, top_p)),
+        "gptneo1" => Box::new(gptneo1::GPTNeo1::new(token_max_length, temperature, top_p)),
+        "gptneo2" => Box::new(gptneo2::GPTNeo2::new(token_max_length, temperature, top_p)),
+        _ => Box::new(gptneo::GPTNeo::new(token_max_length, temperature, top_p)),
     }
 }
 

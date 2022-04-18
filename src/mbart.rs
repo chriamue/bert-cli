@@ -15,7 +15,7 @@ pub struct MBart {
 }
 
 impl MBart {
-    pub fn new() -> Self {
+    pub fn new(token_max_length: u16, temperature: f32, top_p: f32) -> Self {
         let model_resource = Box::new(RemoteResource::from_pretrained(
             MBartModelResources::MBART50_MANY_TO_MANY,
         ));
@@ -35,13 +35,13 @@ impl MBart {
             vocab_resource,
             merges_resource,
             min_length: 10,
-            max_length: 96,
+            max_length: token_max_length.into(),
             do_sample: true,
             early_stopping: false,
             repetition_penalty: 1.0,
-            temperature: 3.5,
-            top_p: 0.9,
+            top_p: top_p.into(),
             top_k: 55,
+            temperature: temperature.into(),
             device,
             ..Default::default()
         };
@@ -72,8 +72,8 @@ impl AI for MBart {
             do_sample: Some(true),
             early_stopping: Some(false),
             repetition_penalty: Some(1.1),
-            temperature: Some(temperature as f64),
-            top_p: Some(top_p as f64),
+            temperature: Some(temperature.into()),
+            top_p: Some(top_p.into()),
             top_k: Some(10),
             ..Default::default()
         };
@@ -97,7 +97,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_response() {
-        let ai = MBart::new();
+        let ai = MBart::new(42, 0.9, 4.0);
         let context = "Lots of Tesla cars to deliver before year end! Your support in taking delivery is much appreciated.".to_string();
         let output = ai
             .response(context.to_string(), 42, 0.9, 4.0, None)

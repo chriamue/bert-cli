@@ -17,7 +17,7 @@ pub struct M2M100 {
 }
 
 impl M2M100 {
-    pub fn new() -> Self {
+    pub fn new(token_max_length: u16, temperature: f32, top_p: f32) -> Self {
         let model_resource = Box::new(RemoteResource::from_pretrained(
             M2M100ModelResources::M2M100_1_2B,
         ));
@@ -36,10 +36,11 @@ impl M2M100 {
             config_resource,
             vocab_resource,
             merges_resource,
-            max_length: 30,
+            max_length: token_max_length.into(),
+            top_p: top_p.into(),
             do_sample: true,
             num_beams: 5,
-            temperature: 1.1,
+            temperature: temperature.into(),
             num_return_sequences: 3,
             device,
             ..Default::default()
@@ -71,8 +72,8 @@ impl AI for M2M100 {
             do_sample: Some(true),
             early_stopping: Some(false),
             repetition_penalty: Some(1.1),
-            temperature: Some(temperature as f64),
-            top_p: Some(top_p as f64),
+            temperature: Some(temperature.into()),
+            top_p: Some(top_p.into()),
             top_k: Some(10),
             ..Default::default()
         };
@@ -96,7 +97,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_response() {
-        let ai = M2M100::new();
+        let ai = M2M100::new(42, 0.9, 1.1);
         let context = "Lots of Tesla cars to deliver before year end! Your support in taking delivery is much appreciated.".to_string();
         let output = ai
             .response(context.to_string(), 42, 0.9, 4.0, None)

@@ -15,7 +15,7 @@ pub struct GPTNeo {
 }
 
 impl GPTNeo {
-    pub fn new() -> Self {
+    pub fn new(token_max_length: u16, temperature: f32, top_p: f32) -> Self {
         let config_resource = Box::new(RemoteResource::from_pretrained(
             GptNeoConfigResources::GPT_NEO_125M,
         ));
@@ -35,12 +35,12 @@ impl GPTNeo {
             vocab_resource,
             merges_resource,
             min_length: 10,
-            max_length: 96,
+            max_length: token_max_length.into(),
             do_sample: true,
             early_stopping: false,
-            repetition_penalty: 1.0,
-            temperature: 3.5,
-            top_p: 0.9,
+            repetition_penalty: 1.1,
+            temperature: temperature.into(),
+            top_p: top_p.into(),
             top_k: 55,
             device: Device::cuda_if_available(),
             ..Default::default()
@@ -88,7 +88,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_response() {
-        let ai = GPTNeo::new();
+        let ai = GPTNeo::new(42, 1.1, 0.9);
         let context = "Lots of Tesla cars to deliver before year end! Your support in taking delivery is much appreciated.".to_string();
         let output = ai
             .response(context.to_string(), 42, 1.1, 0.9, None)

@@ -14,7 +14,7 @@ pub struct Bart {
 }
 
 impl Bart {
-    pub fn new() -> Self {
+    pub fn new(token_max_length: u16, temperature: f32, top_p: f32) -> Self {
         let config_resource = Box::new(RemoteResource::from_pretrained(
             BartConfigResources::BART_CNN,
         ));
@@ -34,13 +34,13 @@ impl Bart {
             vocab_resource,
             merges_resource,
             min_length: 10,
-            max_length: 96,
+            max_length: token_max_length.into(),
             do_sample: true,
             early_stopping: false,
             repetition_penalty: 1.0,
-            temperature: 3.5,
-            top_p: 0.9,
+            top_p: top_p.into(),
             top_k: 55,
+            temperature: temperature.into(),
             device,
             ..Default::default()
         };
@@ -64,15 +64,15 @@ impl AI for Bart {
         token_max_length: u16,
         temperature: f32,
         top_p: f32,
-        stop_sequence: Option<String>,
+        _stop_sequence: Option<String>,
     ) -> Result<String, Box<dyn error::Error>> {
         let generate_options = GenerateOptions {
             max_length: Some(token_max_length.into()),
             do_sample: Some(true),
             early_stopping: Some(false),
             repetition_penalty: Some(1.1),
-            temperature: Some(temperature as f64),
-            top_p: Some(top_p as f64),
+            temperature: Some(temperature.into()),
+            top_p: Some(top_p.into()),
             top_k: Some(10),
             ..Default::default()
         };
@@ -96,7 +96,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_response() {
-        let ai = Bart::new();
+        let ai = Bart::new(42, 1.1, 0.9);
         let context = "Lots of Tesla cars to deliver before year end! Your support in taking delivery is much appreciated.".to_string();
         let output = ai
             .response(context.to_string(), 42, 1.1, 0.9, None)
