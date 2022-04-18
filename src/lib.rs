@@ -7,6 +7,7 @@ mod gpt2;
 mod gptneo;
 mod gptneo1;
 mod gptneo2;
+mod m2m100;
 mod mbart;
 
 pub fn create_ai(
@@ -18,6 +19,7 @@ pub fn create_ai(
     match ai.as_str() {
         "bart" => Box::new(bart::Bart::new()),
         "mbart" => Box::new(mbart::MBart::new()),
+        "m2m100" => Box::new(m2m100::M2M100::new()),
         "gpt2" => Box::new(gpt2::GPT2::new()),
         "gptneo" => Box::new(gptneo::GPTNeo::new()),
         "gptneo1" => Box::new(gptneo1::GPTNeo1::new()),

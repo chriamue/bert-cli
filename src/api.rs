@@ -14,7 +14,7 @@ use rocket_okapi::okapi::schemars::JsonSchema;
 use rocket_okapi::settings::UrlObject;
 use rocket_okapi::{openapi, openapi_get_routes, rapidoc::*, swagger_ui::*};
 use serde::{Deserialize, Serialize};
-use std::time::{Duration, Instant};
+use std::time::Instant;
 
 mod config;
 use config::Config;

@@ -1,31 +1,34 @@
 use async_trait::async_trait;
-use rust_bert::bart::{
-    BartConfigResources, BartGenerator, BartMergesResources, BartModelResources, BartVocabResources,
+use rust_bert::m2m_100::{
+    M2M100ConfigResources, M2M100Generator, M2M100MergesResources, M2M100ModelResources,
+    M2M100VocabResources,
 };
-use rust_bert::pipelines::generation_utils::{GenerateConfig, GenerateOptions, LanguageGenerator};
+use rust_bert::pipelines::generation_utils::GenerateConfig;
+use rust_bert::pipelines::generation_utils::GenerateOptions;
+use rust_bert::pipelines::generation_utils::LanguageGenerator;
 use rust_bert::resources::RemoteResource;
 use std::error;
 use tch::Device;
 
 use crate::ai::AI;
 
-pub struct Bart {
-    model: BartGenerator,
+pub struct M2M100 {
+    model: M2M100Generator,
 }
 
-impl Bart {
+impl M2M100 {
     pub fn new() -> Self {
+        let model_resource = Box::new(RemoteResource::from_pretrained(
+            M2M100ModelResources::M2M100_1_2B,
+        ));
         let config_resource = Box::new(RemoteResource::from_pretrained(
-            BartConfigResources::BART_CNN,
+            M2M100ConfigResources::M2M100_1_2B,
         ));
         let vocab_resource = Box::new(RemoteResource::from_pretrained(
-            BartVocabResources::BART_CNN,
+            M2M100VocabResources::M2M100_1_2B,
         ));
         let merges_resource = Box::new(RemoteResource::from_pretrained(
-            BartMergesResources::BART_CNN,
-        ));
-        let model_resource = Box::new(RemoteResource::from_pretrained(
-            BartModelResources::BART_CNN,
+            M2M100MergesResources::M2M100_1_2B,
         ));
         let device = Device::cuda_if_available();
         let generate_config = GenerateConfig {
@@ -33,38 +36,35 @@ impl Bart {
             config_resource,
             vocab_resource,
             merges_resource,
-            min_length: 10,
-            max_length: 96,
+            max_length: 30,
             do_sample: true,
-            early_stopping: false,
-            repetition_penalty: 1.0,
-            temperature: 3.5,
-            top_p: 0.9,
-            top_k: 55,
+            num_beams: 5,
+            temperature: 1.1,
+            num_return_sequences: 3,
             device,
             ..Default::default()
         };
-        let model = std::thread::spawn(move || BartGenerator::new(generate_config).unwrap())
+        let model = std::thread::spawn(move || M2M100Generator::new(generate_config).unwrap())
             .join()
             .expect("Thread panicked");
 
-        Bart { model }
+        M2M100 { model }
     }
 }
 
-unsafe impl Send for Bart {}
+unsafe impl Send for M2M100 {}
 
-unsafe impl Sync for Bart {}
+unsafe impl Sync for M2M100 {}
 
 #[async_trait]
-impl AI for Bart {
+impl AI for M2M100 {
     async fn response(
         &self,
         context: String,
         token_max_length: u16,
         temperature: f32,
         top_p: f32,
-        stop_sequence: Option<String>,
+        _stop_sequence: Option<String>,
     ) -> Result<String, Box<dyn error::Error>> {
         let generate_options = GenerateOptions {
             max_length: Some(token_max_length.into()),
@@ -86,7 +86,7 @@ impl AI for Bart {
     }
 
     fn name(&self) -> String {
-        "bart".to_string()
+        "m2m100".to_string()
     }
 }
 
@@ -96,10 +96,10 @@ mod tests {
 
     #[tokio::test]
     async fn test_response() {
-        let ai = Bart::new();
+        let ai = M2M100::new();
         let context = "Lots of Tesla cars to deliver before year end! Your support in taking delivery is much appreciated.".to_string();
         let output = ai
-            .response(context.to_string(), 42, 1.1, 0.9, None)
+            .response(context.to_string(), 42, 0.9, 4.0, None)
             .await
             .unwrap();
         println!("{}", output);

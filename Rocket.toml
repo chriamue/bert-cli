@@ -1,7 +1,7 @@
 [default]
 ident = "bert-web"
-# [bart, mbart, gpt2, gptneo, gptneo1, gptneo2]
-model = "gptneo"
+# [bart, mbart, m2m100, gpt2, gptneo, gptneo1, gptneo2]
+model = "gptneo1"
 token_max_length = 100
 temperature = 1.1
 top_p = 0.9
