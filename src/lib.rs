@@ -9,6 +9,7 @@ mod gptneo1;
 mod gptneo2;
 mod m2m100;
 mod mbart;
+mod prophetnet;
 
 pub fn create_ai(
     ai: String,
@@ -24,6 +25,11 @@ pub fn create_ai(
         "gptneo" => Box::new(gptneo::GPTNeo::new(token_max_length, temperature, top_p)),
         "gptneo1" => Box::new(gptneo1::GPTNeo1::new(token_max_length, temperature, top_p)),
         "gptneo2" => Box::new(gptneo2::GPTNeo2::new(token_max_length, temperature, top_p)),
+        "prophetnet" => Box::new(prophetnet::ProphetNet::new(
+            token_max_length,
+            temperature,
+            top_p,
+        )),
         _ => Box::new(gptneo::GPTNeo::new(token_max_length, temperature, top_p)),
     }
 }
