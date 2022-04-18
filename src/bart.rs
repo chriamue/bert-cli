@@ -4,7 +4,7 @@ use rust_bert::bart::{
 };
 use rust_bert::pipelines::common::ModelType;
 use rust_bert::pipelines::text_generation::{TextGenerationConfig, TextGenerationModel};
-use rust_bert::resources::{RemoteResource};
+use rust_bert::resources::RemoteResource;
 use std::error;
 use tch::Device;
 
@@ -16,14 +16,10 @@ pub struct Bart {
 
 impl Bart {
     pub fn new() -> Self {
-        let config_resource =
-            Box::new(RemoteResource::from_pretrained(BartConfigResources::BART));
-        let vocab_resource =
-            Box::new(RemoteResource::from_pretrained(BartVocabResources::BART));
-        let merges_resource =
-            Box::new(RemoteResource::from_pretrained(BartMergesResources::BART));
-        let model_resource =
-            Box::new(RemoteResource::from_pretrained(BartModelResources::BART));
+        let config_resource = Box::new(RemoteResource::from_pretrained(BartConfigResources::BART));
+        let vocab_resource = Box::new(RemoteResource::from_pretrained(BartVocabResources::BART));
+        let merges_resource = Box::new(RemoteResource::from_pretrained(BartMergesResources::BART));
+        let model_resource = Box::new(RemoteResource::from_pretrained(BartModelResources::BART));
         let generate_config = TextGenerationConfig {
             model_type: ModelType::Bart,
             model_resource,

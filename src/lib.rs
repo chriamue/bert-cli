@@ -2,11 +2,12 @@ use serde::{Deserialize, Serialize};
 use std::error;
 
 mod ai;
+mod bart;
 mod gpt2;
 mod gptneo;
 mod gptneo1;
 mod gptneo2;
-mod bart;
+mod mbart;
 
 pub fn create_ai(
     ai: String,
@@ -16,6 +17,7 @@ pub fn create_ai(
 ) -> Box<dyn ai::AI> {
     match ai.as_str() {
         "bart" => Box::new(bart::Bart::new()),
+        "mbart" => Box::new(mbart::MBart::new()),
         "gpt2" => Box::new(gpt2::GPT2::new()),
         "gptneo" => Box::new(gptneo::GPTNeo::new()),
         "gptneo1" => Box::new(gptneo1::GPTNeo1::new()),

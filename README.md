@@ -29,7 +29,7 @@ You can configure the model in the `Rocket.toml` file.
 ```toml
 [default]
 ident = "bert-web"
-# [gptneo, gpt2]
+# [bart, mbart, gpt2, gptneo, gptneo1, gptneo2]
 model = "gpt2"
 
 [debug]
