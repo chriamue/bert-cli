@@ -14,8 +14,9 @@ async function generate() {
         body: JSON.stringify(data)
     }).then(response => response.json())
         .then(data => {
-            const { generated_text } = data;
+            const { generated_text, duration } = data;
             document.getElementById("generated_text").innerHTML = generated_text;
+            document.getElementById("generated_duration").innerHTML = `Generated in ${duration / 1000}s`;
         }
         );
 }

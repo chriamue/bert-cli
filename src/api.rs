@@ -14,6 +14,7 @@ use rocket_okapi::okapi::schemars::JsonSchema;
 use rocket_okapi::settings::UrlObject;
 use rocket_okapi::{openapi, openapi_get_routes, rapidoc::*, swagger_ui::*};
 use serde::{Deserialize, Serialize};
+use std::time::{Duration, Instant};
 
 mod config;
 use config::Config;
@@ -60,6 +61,7 @@ struct GenerationRequest {
 struct GenerationResponse {
     #[schemars(example = "example_generated_text")]
     generated_text: String,
+    duration: u128,
 }
 
 cached_static_response_handler! {
@@ -82,6 +84,7 @@ async fn get_completion(
     bert: &State<Bert>,
     request: GenerationRequest,
 ) -> Json<GenerationResponse> {
+    let start = Instant::now();
     let response = bert
         .generate(
             request.context.to_string(),
@@ -92,8 +95,10 @@ async fn get_completion(
         )
         .await
         .unwrap();
+    let duration = start.elapsed().as_millis();
     Json(GenerationResponse {
         generated_text: response.text,
+        duration,
     })
 }
 
@@ -103,19 +108,7 @@ async fn post_completion(
     bert: &State<Bert>,
     request: Json<GenerationRequest>,
 ) -> Json<GenerationResponse> {
-    let response = bert
-        .generate(
-            request.context.to_string(),
-            request.response_length,
-            request.temp,
-            request.top_p,
-            None,
-        )
-        .await
-        .unwrap();
-    Json(GenerationResponse {
-        generated_text: response.text,
-    })
+    get_completion(bert, request.into_inner()).await
 }
 
 pub struct CORS;
