@@ -4,7 +4,7 @@ use rust_bert::gpt_neo::{
 };
 use rust_bert::pipelines::common::ModelType;
 use rust_bert::pipelines::text_generation::{TextGenerationConfig, TextGenerationModel};
-use rust_bert::resources::{RemoteResource, Resource};
+use rust_bert::resources::RemoteResource;
 use std::error;
 use tch::Device;
 
@@ -16,16 +16,16 @@ pub struct GPTNeo2 {
 
 impl GPTNeo2 {
     pub fn new() -> Self {
-        let config_resource = Resource::Remote(RemoteResource::from_pretrained(
+        let config_resource = Box::new(RemoteResource::from_pretrained(
             GptNeoConfigResources::GPT_NEO_2_7B,
         ));
-        let vocab_resource = Resource::Remote(RemoteResource::from_pretrained(
+        let vocab_resource = Box::new(RemoteResource::from_pretrained(
             GptNeoVocabResources::GPT_NEO_2_7B,
         ));
-        let merges_resource = Resource::Remote(RemoteResource::from_pretrained(
+        let merges_resource = Box::new(RemoteResource::from_pretrained(
             GptNeoMergesResources::GPT_NEO_2_7B,
         ));
-        let model_resource = Resource::Remote(RemoteResource::from_pretrained(
+        let model_resource = Box::new(RemoteResource::from_pretrained(
             GptNeoModelResources::GPT_NEO_2_7B,
         ));
         let generate_config = TextGenerationConfig {

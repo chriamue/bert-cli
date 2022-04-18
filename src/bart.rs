@@ -4,7 +4,7 @@ use rust_bert::bart::{
 };
 use rust_bert::pipelines::common::ModelType;
 use rust_bert::pipelines::text_generation::{TextGenerationConfig, TextGenerationModel};
-use rust_bert::resources::{RemoteResource, Resource};
+use rust_bert::resources::{RemoteResource};
 use std::error;
 use tch::Device;
 
@@ -17,13 +17,13 @@ pub struct Bart {
 impl Bart {
     pub fn new() -> Self {
         let config_resource =
-            Resource::Remote(RemoteResource::from_pretrained(BartConfigResources::BART));
+            Box::new(RemoteResource::from_pretrained(BartConfigResources::BART));
         let vocab_resource =
-            Resource::Remote(RemoteResource::from_pretrained(BartVocabResources::BART));
+            Box::new(RemoteResource::from_pretrained(BartVocabResources::BART));
         let merges_resource =
-            Resource::Remote(RemoteResource::from_pretrained(BartMergesResources::BART));
+            Box::new(RemoteResource::from_pretrained(BartMergesResources::BART));
         let model_resource =
-            Resource::Remote(RemoteResource::from_pretrained(BartModelResources::BART));
+            Box::new(RemoteResource::from_pretrained(BartModelResources::BART));
         let generate_config = TextGenerationConfig {
             model_type: ModelType::Bart,
             model_resource,
@@ -74,7 +74,7 @@ impl AI for Bart {
     }
 
     fn name(&self) -> String {
-        "gptneo".to_string()
+        "bart".to_string()
     }
 }
 

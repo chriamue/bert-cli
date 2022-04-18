@@ -2,11 +2,11 @@ use serde::{Deserialize, Serialize};
 use std::error;
 
 mod ai;
-mod bart;
 mod gpt2;
 mod gptneo;
 mod gptneo1;
 mod gptneo2;
+mod bart;
 
 pub fn create_ai(
     ai: String,
